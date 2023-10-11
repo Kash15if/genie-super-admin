@@ -48,6 +48,7 @@ const TimelineForm = ({ compId, compName }) => {
 
   const editField = (item, index) => {
     setEditable(index);
+    setNewForm(data[index]);
   };
 
   // const saveData = () => {
@@ -62,9 +63,16 @@ const TimelineForm = ({ compId, compName }) => {
 
     if (editable !== -1) {
       let newStructure = [...data];
-      newStructure[editable] = newObj;
+      newStructure[editable] = { ...newObj };
       setData(newStructure);
     }
+  };
+
+  const deleteRow = (index) => {
+    let newStructure = [...data];
+    newStructure.splice(index, 1);
+    console.log(newStructure);
+    setData([...newStructure]);
   };
 
   return (
@@ -127,6 +135,9 @@ const TimelineForm = ({ compId, compName }) => {
                   ) : (
                     <button onClick={() => editField(item, index)}>Edit</button>
                   )}
+                </td>
+                <td>
+                  <button onClick={() => deleteRow(index)}>Delete</button>
                 </td>
               </tr>
             ))}
