@@ -1,0 +1,16 @@
+.layout {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+}
+
+.grid-item {
+  background-color: #3498db;
+  border: 1px solid #ccc;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  color: #fff;
+  font-size: 18px;
+  gap: 10px;
+}
