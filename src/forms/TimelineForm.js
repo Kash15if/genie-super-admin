@@ -1,13 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-const TimelineForm = ({ compId, compName }) => {
+const TimelineForm = ({ pageId, compId, compLabel }) => {
   const [editable, setEditable] = useState(-1);
   const [data, setData] = useState([]);
   const [newForm, setNewForm] = useState({
     time: "",
     title: "",
-    desc: "",
+    description: "",
   });
+
+  useEffect(() => {
+    (async () => {
+      try {
+        let response = await axios.get(
+          `http://localhost:8081/sa/component?pageId=${pageId}&compId=${compId}`
+        );
+        // console.log(response.data);
+        let data = response.data; //? response.data[0] : {};
+        if (data && data.length) {
+          setNewForm(JSON.stringify(data[0]));
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    })();
+  }, []);
 
   const addOrUpdateRow = () => {
     // let newObj = {};
@@ -17,7 +35,7 @@ const TimelineForm = ({ compId, compName }) => {
       setNewForm({
         time: "",
         title: "",
-        desc: "",
+        description: "",
       });
       // console.log(newForm);
     } else {
@@ -27,7 +45,7 @@ const TimelineForm = ({ compId, compName }) => {
       setNewForm({
         time: "",
         title: "",
-        desc: "",
+        description: "",
       });
       setEditable(-1);
       // console.log(newStructure);
@@ -41,7 +59,7 @@ const TimelineForm = ({ compId, compName }) => {
   //   setNewForm({
   //     time: "",
   //     title: "",
-  //     desc: "",
+  //     description: "",
   //   });
   //   setEditable(-1);
   // };
@@ -75,15 +93,39 @@ const TimelineForm = ({ compId, compName }) => {
     setData([...newStructure]);
   };
 
+  const saveDataToDB = async () => {
+    console.log(data);
+    try {
+      const body = {
+        pageId: pageId,
+        componentId: compId,
+        compLabel: compLabel,
+        data: JSON.stringify({ data: data }),
+        compStyles: JSON.stringify({}),
+      };
+      console.log(body);
+      let resp = await axios.post(
+        "http://localhost:8081/sa/update-component",
+        body
+      );
+
+      console.log(resp);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <div>
       {editable === -1 && (
         <>
           <input
             value={newForm.time}
-            type="time"
+            type="text"
             onChange={handleInputChange}
             name="time"
+            step="60"
+            placeholder="HH:MM"
           />
           <input
             value={newForm.title}
@@ -91,9 +133,9 @@ const TimelineForm = ({ compId, compName }) => {
             name="title"
           />
           <input
-            value={newForm.desc}
+            value={newForm.description}
             onChange={handleInputChange}
-            name="desc"
+            name="description"
           />
           <button onClick={addOrUpdateRow}>Add New</button>
         </>
@@ -108,7 +150,7 @@ const TimelineForm = ({ compId, compName }) => {
                   <input
                     disabled={editable !== index ? "disables" : ""}
                     value={item.time}
-                    type="time"
+                    type="text"
                     onChange={handleInputChange}
                     name="time"
                   />
@@ -124,9 +166,9 @@ const TimelineForm = ({ compId, compName }) => {
                 <td>
                   <input
                     disabled={editable !== index ? "disables" : ""}
-                    value={item.desc}
+                    value={item.description}
                     onChange={handleInputChange}
-                    name="desc"
+                    name="description"
                   />
                 </td>
                 <td>
@@ -143,6 +185,7 @@ const TimelineForm = ({ compId, compName }) => {
             ))}
         </table>
       </div>
+      <button onClick={() => saveDataToDB()}> SAVE COMPONENT DATA</button>
     </div>
   );
 };
