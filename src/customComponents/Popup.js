@@ -8,7 +8,7 @@ export default function BasicDemo({ visible, setVisible, children, header }) {
       <Dialog
         header={header}
         visible={visible}
-        style={{ width: "50vw" }}
+        style={{ width: "80vw" }}
         onHide={() => setVisible(false)}
       >
         {children}

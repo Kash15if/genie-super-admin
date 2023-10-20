@@ -26,12 +26,12 @@ const DraggableResizableGrid = ({
         draggableHandle=".grid-item"
         isDraggable={true}
         isResizable={true}
-        onLayoutChange={updateLayout}
+        onLayoutChange={(e) => updateLayout(e)}
       >
         {layout.map((item) => (
           <div key={item.i} className="grid-item">
             <>
-              {item.name}
+              {item.CompType + ": - " + item.i}
               <button onClick={() => deleteOneGrid(item.i)}>Delete</button>
               <button onClick={() => openPopupAndUpdateBlock(item)}>
                 Update
