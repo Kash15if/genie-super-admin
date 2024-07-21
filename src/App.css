@@ -27,3 +27,7 @@ th {
   text-align: left;
   padding: 12px;
 }
+
+.classA{
+  border: "red";
+}
